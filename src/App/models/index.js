@@ -7,5 +7,6 @@ export default function () {
     // Counter: require('./Counter').default(...arguments),
     Task: require('./Task').default(...arguments),
     Game: require('./Game').default(...arguments),
+    Passport: require('./Passport').default(...arguments),
   };
 }

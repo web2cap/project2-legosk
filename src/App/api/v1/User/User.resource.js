@@ -7,7 +7,9 @@ export default (ctx) => {
 
     get: async (req) => {
       const criteria = modules.getCriteria(req);
+      console.log(criteria, '45yr56khihjgiu45hui45hiu');
       const user = await User.findOne(criteria);
+      console.log(user);
       return user;
     },
 

@@ -4,9 +4,9 @@ import set from 'lodash/set';
 export default class UserStore {
 
   @observable username;
-  @observable name;
-  @observable surname;
-  @observable middlename;
+  @observable firstName;
+  @observable lastName;
+  @observable fullname;
   @observable info = {
     phone: '',
     company: '',
@@ -21,11 +21,14 @@ export default class UserStore {
   }
 
   async init(data) {
+    console.log('init');
     const user = await this.store.api.getUser(data);
+    console.log(user);
     this.update(user);
   }
 
   update(user) {
+    console.log(user, 'update');
     for (const item in user) {
       set(this, item, user[item]);
     }
@@ -39,6 +42,10 @@ export default class UserStore {
   @action
   editUser() {
     this.store.api.userEdit(this.toJS);
+  }
+
+  @computed get fullName() {
+    return `${this.firstName} ${this.lastName}`;
   }
 
   @computed get toJS() {

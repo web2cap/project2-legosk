@@ -32,4 +32,39 @@ export default class ApiClient extends ApiClientBase {
     return res.data;
   }
 
+  async signupSocial(data) {
+    let url = `/auth/${data.provider}/signup?`;
+    if (data) {
+      const keys = Object.keys(data);
+      keys.map((key) => {
+        url += `${key}=`;
+        url += data[key];
+        url += '&';
+      });
+    }
+    return this.fetch(url, {
+      method: 'GET',
+    });
+  }
+  async loginSocial(data) {
+    let url = `/auth/${data.provider}/login?`;
+    if (data) {
+      const keys = Object.keys(data);
+      keys.map((key) => {
+        url += `${key}=`;
+        url += data[key];
+        url += '&';
+      });
+    }
+    return this.fetch(url, {
+      method: 'GET',
+    });
+  }
+  async getPassportByToken(token) {
+    const url = `/passport?p=${token}`;
+    return this.fetch(url, {
+      method: 'GET',
+    });
+  }
+
 }

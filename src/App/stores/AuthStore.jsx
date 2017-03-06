@@ -55,6 +55,7 @@ export default class AuthStore {
   }
 
   async setToken(token) {
+    console.log('setToken', token);
     this.store.api.setAuthToken(token);
     cookie.save('token', token);
     this.token = token;
@@ -78,10 +79,30 @@ export default class AuthStore {
     const res = await this.store.api.authRecovery(data);
     return res;
   }
+  // social networks
+  async signupSocial(data) {
+    this.promise = this.store.api.signupSocial(data);
+    const res = await this.promise;
+    console.log(res, 'signupSocial');
+    await this.setToken(res.data.token);
+    await this.updateUser(res.data.user);
+    return res;
+  }
+  async loginSocial(data) {
+    this.promise = this.store.api.loginSocial(data);
+    const res = await this.promise;
+    console.log(res, 'loginSocial');
+    await this.setToken(res.data.token);
+    await this.updateUser(res.data.user);
+    return res;
+  }
 
   @action
   async updateUser(data = null) {
+    console.log('updateUser', data);
+    console.log(this.store.user);
     if (this.store.user) {
+      console.log(true);
       this.store.user.update(data);
     }
   }

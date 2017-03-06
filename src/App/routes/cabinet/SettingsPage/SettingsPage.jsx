@@ -38,7 +38,7 @@ export default class ProfilePage extends Component {
               <Form
                 fields={[
                   {
-                    name: 'username',
+                    name: 'email',
                     title: 'Почта',
                     control: {
                       placeholder: 'Например, utkin@mail.ru',
@@ -47,7 +47,7 @@ export default class ProfilePage extends Component {
                     },
                   },
                   {
-                    name: 'name',
+                    name: 'firstName',
                     title: 'Имя',
                     control: {
                       placeholder: 'Например, Василий',
@@ -56,7 +56,7 @@ export default class ProfilePage extends Component {
                     },
                   },
                   {
-                    name: 'surname',
+                    name: 'lastName',
                     title: 'Фамилия',
                     control: {
                       placeholder: 'Например, Пушкин',
@@ -64,15 +64,15 @@ export default class ProfilePage extends Component {
                       onChange: this.changeField('surname'),
                     },
                   },
-                  {
-                    name: 'middlename',
-                    title: 'Отчество',
-                    control: {
-                      placeholder: 'Например, Александрович',
-                      value: user.middlename,
-                      onChange: this.changeField('middlename'),
-                    },
-                  },
+                  // {
+                  //   name: 'middlename',
+                  //   title: 'Отчество',
+                  //   control: {
+                  //     placeholder: 'Например, Александрович',
+                  //     value: user.middlename,
+                  //     onChange: this.changeField('middlename'),
+                  //   },
+                  // },
                   {
                     name: 'info.phone',
                     title: 'Телефон',

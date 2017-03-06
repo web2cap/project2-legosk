@@ -2,12 +2,16 @@ import UniversalSchema from 'lego-starter-kit/utils/UniversalSchema';
 import { getSchema as getDefaultSchema } from 'lego-starter-kit/CoreApp/models/User';
 
 export function getSchema(ctx) {
+  const mongoose = ctx.db
   const DefaultSchema = getDefaultSchema(ctx);
   const schema = DefaultSchema.extend({
-    surname: {
+    username: {
       type: String,
     },
-    middlename: {
+    firstName: {
+      type: String,
+    },
+    lastName: {
       type: String,
     },
     avatar: {
@@ -24,6 +28,22 @@ export function getSchema(ctx) {
         type: String,
       },
     },
+    passports: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+  });
+
+  schema.virtual('fullname').get(function () {
+    let fullname = '';
+    if (this.firstName) fullname += this.firstName;
+    if (this.lastName) {
+      if (fullname.length > 0) fullname += ' ';
+      fullname += this.lastName;
+    }
+    return fullname;
   });
 
   return schema;

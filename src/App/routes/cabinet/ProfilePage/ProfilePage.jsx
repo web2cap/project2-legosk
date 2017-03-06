@@ -19,10 +19,9 @@ export default class ProfilePage extends Component {
         <Col md={6} xs={12}>
           <Card style={{ marginTop: 20 }}>
             <CardBlock>
-              <h3>{user.username}</h3>
-              <p><b>Имя: </b>{user.name}</p>
-              <p><b>Фамилия: </b>{user.surname}</p>
-              <p><b>Отчество: </b>{user.middlename}</p>
+              <h3>{user.fullName}</h3>
+              <p><b>Имя: </b>{user.firstName}</p>
+              <p><b>Фамилия: </b>{user.lastName}</p>
               <hr />
               <p><b>Телефон: </b>{user.info.phone || 'Нет телефона'}</p>
               <p><b>Компания: </b>{user.info.company || 'Нет компании'}</p>

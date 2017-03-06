@@ -126,9 +126,9 @@ export default class AdminLayout extends Component {
             <UserMenu
               // onLinkClick={action('onLinkClick')}
               onButtonClick={this.logout}
-              image={'https://remont3.ru/templates/umedia/dleimages/noavatar.png'}
-              name={user.name}
-              title={`Добро пожаловать, ${user.name}`}
+              image={user.avatar}
+              name={user.fullName}
+              title={`Добро пожаловать, ${user.firstName} ${user.lastName}`}
               description="Ваш статус"
               buttons={[
                 { key: 1, text: 'Изменить', align: 'left' },
@@ -140,8 +140,8 @@ export default class AdminLayout extends Component {
         <SidebarWrapper>
           <UserPanel
             statusText="В сети"
-            image={'https://remont3.ru/templates/umedia/dleimages/noavatar.png'}
-            name={user.name}
+            image={user.avatar}
+            name={user.fullName}
           />
           <SidebarSearch
             placeholder="Поиск..."

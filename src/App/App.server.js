@@ -4,7 +4,7 @@ import getApi from './api/v1';
 import getDocs from './api/v1/v1.docs';
 import routes from './routes';
 import assets from './assets'; // eslint-disable-line
-
+import getSocialNetworks from './socialNetworks';
 
 function castTask(task) {
   if (!task.answers) return task;
@@ -37,6 +37,10 @@ function castTask(task) {
 }
 
 export default class App extends ReactApp {
+  init() {
+    super.init();
+    this.socialNetworks = getSocialNetworks(this);
+  }
 
   getModels() {
     return {
