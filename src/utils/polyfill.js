@@ -7,6 +7,7 @@ global.timing = () => {
 };
 // }
 require('babel-polyfill');
+require('babel-runtime/core-js/symbol');
 require('babel-runtime/core-js/promise').default = require('bluebird');
 // require('isomorphic-fetch');
 global.fetch = require('./fetch').default;

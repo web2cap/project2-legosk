@@ -4,46 +4,10 @@ import { Provider } from 'react-tunnel'
 import _ from 'lodash'
 import util from 'util'
 import ReactDOM from 'react-dom/server';
+import Root from './Root';
 
-export class Root extends Component {
-  static childContextTypes = {
-    history: PropTypes.object.isRequired,
-    insertCss: PropTypes.func.isRequired,
-    rootState: PropTypes.object.isRequired,
-    setRootState: PropTypes.func.isRequired,
-  };
-  constructor(props) {
-    super(props)
-    this.state = props.ctx.rootState || {}
-  }
+export default (ctx) => class Html {
 
-  componentDidMount() {
-    const html = document.getElementsByTagName("html")[0]
-    html.className = html.className.replace('ua_js_no', 'ua_js_yes')
-  }
-
-  getChildContext() {
-    return {
-      history: this.props.ctx && this.props.ctx.history || (() => {}),
-      insertCss: this.props.ctx && this.props.ctx.insertCss || (() => {}),
-      rootState: this.state,
-      setRootState: (...args) => {
-        this.setState(...args);
-      }
-    };
-  }
-  render() {
-    const provider = this.props.ctx.provider
-    return <Provider provide={provider.provide.bind(provider)}>
-      {() => this.props.component}
-    </Provider>
-  }
-}
-
-export default class Html {
-
-  static Root = Root;
-  static Root = Root;
   constructor(props) {
     this.props = props || {}
   }
@@ -71,10 +35,14 @@ export default class Html {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 ${this.renderAssets('css')}
 ${this.renderStyle()}
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
 `
   }
   renderRoot() {
-    const Root = this.constructor.Root
+    const Root = this.props.Root || Root
     const component = <Root {...this.props} rootState={this.getRootState()}>
       {this.props.children}
     </Root>
@@ -122,5 +90,10 @@ ${debug}
   </body>
 </html>
     `
+  }
+
+
+  static render(props) {
+    return (new this.constructor(props)).render()
   }
 }

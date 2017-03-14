@@ -1,59 +1,53 @@
 import bunyan from 'bunyan';
 import express from 'express';
+import _ from 'lodash';
 import { Server as httpServer } from 'http';
 import mixin from 'lego-starter-kit/utils/mixin';
 import AsyncRouter from 'lego-starter-kit/utils/AsyncRouter';
+import Core from 'lego-starter-kit/Core';
 
-export default class ExpressApp {
+export default class ExpressApp extends Core {
   static mixin = mixin;
   asyncRouter = AsyncRouter;
-  constructor(params = {}) {
-    Object.assign(this, params);
-    if (!this.log) this.log = this.getLogger(); // because CoreApp.log() before init
-    try {
-      this.init();
-      this.initExpress();
-    } catch (err) {
-      this.log.fatal('init err', err);
-    }
-  }
-  createExpressApp() {
+
+  createExpress() {
     return express();
   }
-  getLogger(params) {
-    const options = Object.assign({
-      name: 'app',
-      src: __DEV__,
-      level: 'trace',
-    }, this.config.logger || {});
-    return bunyan.createLogger(options, params);
-  }
-  init() {
+
+  async init() {
+    super.init();
     this.log.trace('ExpressApp init');
-    this.app = this.createExpressApp();
-    this.httpServer = httpServer(this.app);
+    this.express = this.createExpress();
+    this.httpServer = httpServer(this.express);
+    if (this.config.express) {
+      this.log.trace('express config:', this.config.express);
+      _.forEach((this.config.express || {}), (value, key) => {
+        this.express.set(key, value);
+      });
+    }
   }
 
-  initExpress() {
-    this.log.trace('ExpressApp initExpress');
+  get app() {
+    this.log.info('this.app DEPRECATED');
+    return this.express;
+  }
+
+  // async initExpress() {
+  //   this.log.trace('ExpressApp initExpress');
+  //   this.useMiddlewares();
+  //   this.useRoutes();
+  //   this.useStatics();
+  //   this.useDefaultRoute();
+  //   return this;
+  // }
+  async runExpress() {
+    this.log.trace('ExpressApp.runExpress');
     this.useMiddlewares();
     this.useRoutes();
     this.useStatics();
     this.useDefaultRoute();
-  }
-
-  useMiddlewares() {}
-  useStatics() {}
-  useRoutes() {}
-  useDefaultRoute() {
-    this.app.use((req, res) => {
-      return res.send(`Hello World from "${this.config.name}"`);
-    });
-  }
-
-  async run() {
-    this.log.trace('ExpressApp run');
-
+    // this.useExpress();
+    // this.log.trace('ExpressApp runExpress');
     return new Promise((resolve) => {
       this.httpInstance = this.httpServer.listen(this.config.port, () => {
         this.log.info(`App running on port ${this.config.port}!`);
@@ -61,4 +55,19 @@ export default class ExpressApp {
       });
     });
   }
+
+  useMiddlewares() {}
+  useStatics() {}
+  useRoutes() {}
+  useDefaultRoute() {
+    this.express.use((req, res) => {
+      return res.send('ExpressApp: Hello World');
+    });
+  }
+
+  async run() {
+    // await this.initExpress();
+    await this.runExpress();
+  }
+
 }

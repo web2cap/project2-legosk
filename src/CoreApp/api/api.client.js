@@ -177,11 +177,17 @@ export default class ApiClient {
             res,
           });
         }
-        return this.afterFetch({
+        const params = {
+          url: args[0],
+          params: args[1],
           json,
           text,
           res,
-        });
+        };
+        if (args[1] && args[1].afterFetch) {
+          args[1].afterFetch(params);
+        }
+        return this.afterFetch(params);
       });
   }
 }

@@ -9,8 +9,8 @@ import getMongoose from './getMongoose';
 import getDocsTemplate from './getDocsTemplate';
 
 export default class CoreApp extends ExpressApp {
-  init() {
-    super.init(...arguments);
+  async init() {
+    await super.init(...arguments);
     this.log.trace('CoreApp init');
 
     this.db = this.getDatabase();
@@ -30,6 +30,7 @@ export default class CoreApp extends ExpressApp {
     this.log.trace('helpers', Object.keys(this.helpers));
     this.statics = this.getResolvedStatics();
     this.log.trace('statics', this.statics);
+    return this;
   }
   getMiddlewares() {
     return require('./middlewares').default(this); // eslint-disable-line
@@ -55,31 +56,31 @@ export default class CoreApp extends ExpressApp {
   getHelpers() {
     return require('./helpers').default(this); // eslint-disable-line
   }
+
   getStatics() {
-    return {};
+    return [
+      'apple-touch-icon.png',
+      'browserconfig.xml',
+      'crossdomain.xml',
+      'favicon.ico',
+      'humans.txt',
+      'robots.txt',
+    ].reduce((statics, path) => {
+      statics[path] = `./node-modules/lego-starter-kit/src/public/${path}`;
+      return statics;
+    }, {});
   }
   getResolvedStatics() {
     return _.mapValues(this.getStatics() || {}, p => path.resolve(p));
   }
   useStatics() {
     _.forEach(this.getResolvedStatics(), (path, url) => {
-      this.app.use(url, express.static(path));
+      this.express.use(url, express.static(path));
     });
   }
 
   useStaticPublic(publicPath, urlPath = null) {
-    // if (!publicPath) {
-    //   publicPath = path.join(__dirname, 'public');
-    // } else {
-    //   publicPath = path.join(publicPath);
-    // }
-    // if (urlPath == null) {
-    //   urlPath = '/';
-    // }
-    // this.statics[urlPath] = publicPath
-    this.log.trace('DEPRECATED');
-    // this.log.trace(`Static attach ${urlPath} => ${publicPath}`);
-    // this.app.use(urlPath, express.static(publicPath));
+    this.log.trace('useStaticPublic DEPRECATED');
   }
 
   getUsingMiddlewares() {
@@ -143,18 +144,18 @@ export default class CoreApp extends ExpressApp {
   useMiddlewares() {
     const middlewares = _.flattenDeep(this.getUsingMiddlewares());
     middlewares.forEach((middleware) => {
-      middleware && typeof middleware === 'function' && this.app.use(middleware);
+      middleware && typeof middleware === 'function' && this.express.use(middleware);
     });
     this.afterUseMiddlewares();
   }
   useDefaultRoute() {
-    this.app.use((req, res, next) => {
+    this.express.use((req, res, next) => {
       const err = this.errors.e404('Route not found');
       next(err);
     });
   }
   afterUseMiddlewares() {
-    this.middlewares.catchError && this.app.use(this.middlewares.catchError);
+    this.middlewares.catchError && this.express.use(this.middlewares.catchError);
   }
 
 
@@ -173,12 +174,7 @@ export default class CoreApp extends ExpressApp {
   async run(...args) {
     this.log.trace('CoreApp.run');
     this.config.db && this.db && await this.runDb();
-    await super.run(...args);
     this.config.sockets && await this.runSockets();
-    await this.afterRun();
-  }
-
-  afterRun() {
-
+    await super.run();
   }
 }

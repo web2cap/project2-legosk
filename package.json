@@ -8,6 +8,7 @@
     "bcryptjs": "2.4.0",
     "bluebird": "3.4.7",
     "body-parser": "1.16.0",
+    "browser-bunyan": "^0.4.0",
     "bunyan": "1.8.5",
     "cookie-parser": "1.4.3",
     "core-decorators": "0.15.0",
@@ -28,9 +29,9 @@
     "react-dom": "15.4.2",
     "react-tunnel": "0.1.0",
     "socket.io": "1.7.2",
+    "socket.io-as-promised": "^1.0.0",
     "universal-router": "2.0.0",
     "uuid": "3.0.1",
-    "socket.io-as-promised": "^1.0.0",
     "whatwg-fetch": "2.0.2"
   },
   "devDependencies": {

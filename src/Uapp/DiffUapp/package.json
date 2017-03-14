@@ -1,0 +1,4 @@
+{
+  "main": "DiffUapp.server.js",
+  "browser": "DiffUapp.client.js"
+}
