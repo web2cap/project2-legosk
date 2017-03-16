@@ -1,6 +1,6 @@
 // import ssr from './ssr'
 // import UniversalRouter from 'universal-router';
-// import { createMemoryHistory } from 'history';
+import { createMemoryHistory } from 'history';
 import Core from 'lego-starter-kit/Core';
 // import assets from './assets'; // eslint-disable-line import/no-unresolved
 // import routes from './routes';
@@ -30,13 +30,13 @@ export default class DiffUapp extends Core {
     // this.asyncRouter
     //
 
-    const uapp = new this.prototype.constructor({
-      app,
-      config: app.config.client || {},
-      req
-    });
+    // const uapp = new this.prototype.constructor({
+    //   app,
+    //   config: app.config.client || {},
+    //   // req
+    // });
     // await uapp.init();
-    uapp.init();
+    // uapp.init();
     api.get('*', async (req, res) => {
       const uapp = new this.prototype.constructor({
         app,
@@ -46,8 +46,8 @@ export default class DiffUapp extends Core {
       await uapp.init();
       await uapp.run(req);
       const pack = await uapp.serverResolve();
+      if (pack.status) res.status(pack.status);
       if (pack.redirect) return res.redirect(pack.redirect);
-      if (pack.status) return res.status(pack.status);
       res.send(pack.content);
     });
     return api;
@@ -65,8 +65,9 @@ export default class DiffUapp extends Core {
 
   getUniversalRoutesParams() {
     const uparams = {
+      ...this.getReq(),
       history: createMemoryHistory({
-        initialEntries: [req.url],
+        initialEntries: [this._req.url],
       }),
       style: [],
       insertCss: (...styles) => {
@@ -87,7 +88,18 @@ export default class DiffUapp extends Core {
     };
   }
 
-  serverResolve() {
+
+  async serverResolve() {
+
+
+
+    // @TODO server render
+
+
+    const page = await this.getPage();
+    console.log({page});
+
+
     return {
       content: 'hello',
     };

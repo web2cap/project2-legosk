@@ -1,5 +1,5 @@
 // import FastClick from 'fastclick';
-// import UniversalRouter from 'universal-router';
+import UniversalRouter from 'universal-router';
 // import bunyan from 'browser-bunyan';
 // import qs from 'query-string';
 // import { createPath } from 'history/PathUtils';
@@ -18,8 +18,16 @@ import DiffUapp from './DiffUapp';
 // console.log({assets});
 
 export default class Uapp extends DiffUapp {
+  async started() {
+    if (__DEV__) {
+      console.log(`🎃 Uapp started`);
+    }
+  }
 
-  init(rootState, req) {
+  init() {
+
+  }
+  init2(rootState, req) {
     this.api = new ApiClient({ base: '/api/v1' });
     this.auth = new AuthStore(this);
     //
@@ -46,6 +54,9 @@ export default class Uapp extends DiffUapp {
   provide() {
     return {
       app: this,
+    }
+    return {
+      uapp: this,
       auth: this.auth,
       user: this.auth && this.auth.user,
       api: this.api,
@@ -54,21 +65,27 @@ export default class Uapp extends DiffUapp {
 
 
   getUniversalRoutes() {
-    return routes;
+    return require('./routes').default;
   }
 
   createPage() {
     return {};
   }
+  getRootState() {
+    return this.rootState || {};
+  }
 
   getUniversalRoutesParams() {
+    const req = this.getReq();
     return {
+      path: req.path, // for universal routing
+
       // history
       // style
       // insertCss
-      ...super.getUniversalRoutesParams(),
-      req: this.getReq(),
+      ...super.getUniversalRoutesParams(), // depends of cos-env
 
+      req,
       app: this.app,
       uapp: this,
       rootState: this.getRootState(),
@@ -77,6 +94,7 @@ export default class Uapp extends DiffUapp {
   }
 
   getPage() {
+    console.log(this.getUniversalRoutes());
     return UniversalRouter.resolve(this.getUniversalRoutes(), this.getUniversalRoutesParams());
   }
 }

@@ -4,6 +4,7 @@
 // import ErrorPage from './ErrorPage'
 // import App from '../App'
 import HomePage from './HomePage'
+import Sidebar from './Sidebar'
 import CounterPage from './CounterPage'
 export default {
 
@@ -13,20 +14,28 @@ export default {
   children: [
     {
       path: '/',
-      async action() {
-        return {
-          title: 'HomePage',
-          component: <HomePage />,
-        };
+      async action({ page }) {
+        return page
+          .setTitle('HomePage')
+          .component(<HomePage />);
+      },
+    },
+    {
+      path: '/sidebar',
+      async action({ page }) {
+        return page
+          .setTitle('HomePage with sidebar')
+          .layout(Sidebar)
+          .component(<HomePage />);
       },
     },
     {
       path: '/static',
-      async action() {
-        return {
+      async action({ page }) {
+        return page.set({
           title: 'StaticPage',
           component: <div>static</div>,
-        };
+        })
       },
     },
     {
@@ -62,13 +71,14 @@ export default {
   ],
 
   async action({ next }) {
+    console.log( 'start router');
     let route;
 
     // Execute each child route until one of them return the result
     // TODO: move this logic to the `next` function
     // console.log('action');
     do {
-      // console.log('do');
+      console.log('do');
 
       route = await next();
     } while (!route);
