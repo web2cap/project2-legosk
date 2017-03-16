@@ -23,12 +23,8 @@ const customConfig = {
           clientID: '5717694',
           clientSecret: 'o1quBEHhCa8OwCKdmdH5',
         },
-        // scope: ['asdasdasd'],
       },
-    }
-
-  }
+    },
+  },
 };
-export default config.server(baseConfig,
-  { ...customConfig, strategies: require('./strategies').default(customConfig) },
-);
+export default config.server(baseConfig, customConfig);
