@@ -4,7 +4,8 @@ import getApi from './api/v1';
 import getDocs from './api/v1/v1.docs';
 import routes from './routes';
 import assets from './assets'; // eslint-disable-line
-import getSocialNetworks from './socialNetworks';
+import getStrategies from './strategies';
+import passport from 'passport';
 
 function castTask(task) {
   if (!task.answers) return task;
@@ -39,17 +40,25 @@ function castTask(task) {
 export default class App extends ReactApp {
   init() {
     super.init();
-    this.socialNetworks = getSocialNetworks(this);
   }
-
   getModels() {
     return {
       ...super.getModels(),
       ...require('./models').default(this), // eslint-disable-line
     };
   }
+  useStrategies() {
+    const strategies = getStrategies(this);
+    this.strategies = {};
+    this.passport = passport;
+    Object.keys(strategies).map((key) => {
+      const strategy = strategies[key];
+      this.passport.use(strategy.getStrategy(strategy));
+    });
+  }
 
   useRoutes() {
+    this.useStrategies();
     this.app.enable('trust proxy');
     this.app.all('/api', (req, res) => res.json({ message: 'Current API version is here: /api/v1', url: '/api/v1' }));
     this.app.use('/api/v1', this.getDocsRouter(getDocs, {

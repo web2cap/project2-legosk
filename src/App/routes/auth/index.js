@@ -45,7 +45,7 @@ export default {
       },
     },
     {
-      path: '/vk',
+      path: '/vkontakte',
       async action({ appStore }) {
         if (__SERVER__) {
           return {
@@ -71,7 +71,7 @@ export default {
           }
           return {
             title: 'vkontakte',
-            component: <AuthPage type="vk" passport={passport} token={p} />,
+            component: <AuthPage type="vkontakte" passport={passport} token={p} />,
           };
         }
       },

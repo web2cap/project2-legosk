@@ -2,6 +2,7 @@
 // import youtube from 'passport-youtube-v3'
 import passport from 'passport';
 import Vkontakte from 'passport-vkontakte';
+import Youtube from 'passport-youtube-v3';
 import fetch from 'isomorphic-fetch';
 
 const fields = [
@@ -74,6 +75,7 @@ export default (ctx) => {
   socialNetworks.passport = passport;
   socialNetworks.strategy = {};
   socialNetworks.strategy.Vkontakte = Vkontakte.Strategy;
+  socialNetworks.strategy.Youtube = Youtube.Strategy;
   socialNetworks.passport.use(new socialNetworks.strategy.Vkontakte({
     clientID: '5717694',
     clientSecret: 'o1quBEHhCa8OwCKdmdH5',
@@ -113,6 +115,52 @@ export default (ctx) => {
     await p.save();
     return done(null,
       { accessToken, refreshToken, profile, passport: p });
+  }));
+  socialNetworks.passport.use(new socialNetworks.strategy.Youtube({
+    clientID: '201294679107-gln75259vurm2lkb366h9f6t3ekdm9v9.apps.googleusercontent.com',
+    clientSecret: 'hXnkFH2F_kIP5zIKe7DVVeLu',
+    callbackURL: 'http://localhost:3000/api/v1/auth/youtube/callback',
+    scope: [
+      'https://www.googleapis.com/auth/youtube.readonly',
+      'https://www.googleapis.com/auth/youtube',
+      'https://www.googleapis.com/auth/youtube.force-ssl',
+      'https://www.googleapis.com/auth/youtubepartner-channel-audit',
+    ],
+  }, async (accessToken, refreshToken, profile, done) => {
+    // const res = await fetch(`https://api.vk.com/method/users.get?fields=${fields.join(',')}&access_token=${accessToken}`);
+    // const json = await res.json();
+    // profile.data = json.response[0];
+    // let p = await Passport.findOne({
+    //   provider: 'youtube',
+    //   providerId: profile.id,
+    // });
+    // if (p) {
+    //   return done(null,
+    //     { accessToken, refreshToken, profile, passport: p });
+    // }
+    // p = new Passport({
+    //   provider: 'vkontakte',
+    //   providerId: profile.id,
+    //   raw: profile.data,
+    //   token: accessToken,
+    //   profile: {
+    //     firstName: profile.data.first_name,
+    //     lastName: profile.data.last_name,
+    //     gender: profile.data.sex === 1 ? 'female' : 'male',
+    //     photos: [
+    //       profile.data.photo_50,
+    //       profile.data.photo_100,
+    //       profile.data.photo_200,
+    //       profile.data.photo_max,
+    //     ],
+    //     avatar: profile.data.photo_max_orig,
+    //     city: profile.data.city,
+    //     country: profile.data.country,
+    //   },
+    // });
+    // await p.save();
+    return done(null,
+      { accessToken, refreshToken, profile });
   }));
   return socialNetworks;
 };
