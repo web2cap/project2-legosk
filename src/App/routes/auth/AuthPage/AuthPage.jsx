@@ -125,6 +125,7 @@ export default class AuthPage extends Component {
         {
           name: 'p',
           control: {
+            // type: hidden
             style: {
               display: 'none',
             },
