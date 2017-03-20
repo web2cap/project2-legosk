@@ -48,12 +48,12 @@ export default class App extends ReactApp {
     };
   }
   useStrategies() {
-    const strategies = getStrategies(this);
-    this.strategies = {};
     this.passport = passport;
-    Object.keys(strategies).map((key) => {
-      const strategy = strategies[key];
-      this.passport.use(strategy.getStrategy(strategy));
+    const strategies = getStrategies(this);
+    this.strategies = _.map(strategies || [], (Strategy) => {
+      const strategy = new Strategy();
+      this.passport.use(strategy.getStrategy());
+      return strategy;
     });
   }
 
