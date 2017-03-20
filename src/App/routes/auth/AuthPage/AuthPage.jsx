@@ -64,7 +64,7 @@ export default class AuthPage extends Component {
       const res = await auth.signup(data);
       this.redirect('/');
     }
-    if (this.props.type === 'vk') {
+    if (this.props.type === 'vkontakte') {
       const res = await auth.signupSocial(data);
       this.redirect('/');
     }
@@ -120,7 +120,7 @@ export default class AuthPage extends Component {
         </div>
       );
     }
-    if (type === 'vk') {
+    if (type === 'vkontakte') {
       fields = [
         {
           name: 'p',
@@ -233,7 +233,7 @@ export default class AuthPage extends Component {
                       >
                         {/* <If condition={!status}> */}
                         <span style={{ visibility: !status ? 'visible' : 'hidden' }}>
-                          <If condition={type === 'vk'}>
+                          <If condition={type === 'vkontakte'}>
                             Зарегистрироваться
                           </If>
                           <If condition={type === 'login'}>
@@ -264,7 +264,7 @@ export default class AuthPage extends Component {
                     )}
                   />
                 </CardBlock>
-                <If condition={type !== 'vk'}>
+                <If condition={type !== 'vkontakte'}>
                   <CardFooter className="text-xs-center">
                     <ButtonGroup>
                       <a href="/api/v1/auth/vkontakte">
@@ -296,7 +296,7 @@ export default class AuthPage extends Component {
                   </CardBlock>
                 </Card>
               </If>
-              <If condition={type !== 'signup' && type !== 'vk'}>
+              <If condition={type !== 'signup' && type !== 'vkontakte'}>
                 <Card>
                   <CardBlock className="text-xs-center" style={{ textAlign: 'center' }}>
                     <CardText>Вы еще не зарегистрированы?</CardText>
