@@ -4,7 +4,7 @@ const result = config.serverWithEnv(baseConfig, {
   client: require('./client').default, // eslint-disable-line
 
   env: process.env.NODE_ENV || process.env.ENV || 'development',
-  port: process.env.PORT || 8080,
+  port: process.env.PORT || 8081,
 
   host: process.env.HOST || 'localhost',
   externalPort: process.env.EXTERNAL_PORT || 3000,
